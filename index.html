@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Planner – Chromakopia Edition</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="app-header no-print">
+  <h1>Planner <span class="grad">Chromakopia</span></h1>
+  <div class="actions">
+    <button id="toggleTheme" class="btn ghost" title="Cambiar tema">🌗</button>
+    <button id="exportData" class="btn">Exportar JSON</button>
+    <button id="importDataBtn" class="btn ghost">Importar</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+    <button id="clearAll" class="btn danger">Reset</button>
+    <button id="printBtn" class="btn accent">Imprimir / PDF</button>
+  </div>
+</header>
+
+<nav class="tabs no-print" id="tabNav">
+  <button data-tab="overview" class="active">Resumen</button>
+  <button data-tab="weekly">Tablero Semanal</button>
+  <button data-tab="daily">Plan Diario</button>
+  <button data-tab="training">Entrenamiento</button>
+  <button data-tab="study">Estudio / Idioma</button>
+  <button data-tab="creative">Creativo</button>
+  <button data-tab="review">Revisión</button>
+  <button data-tab="mindmap">Mapa Mental</button>
+  <button data-tab="philo">Filosofía</button>
+  <button data-tab="parking">Parking Lot</button>
+  <button data-tab="notes">Notas</button>
+</nav>
+
+<main id="pages">
+
+  <!-- 1. VISIÓN / OVERVIEW -->
+  <section class="page tab active" data-tab="overview">
+    <h2>Visión Mensual</h2>
+    <div class="grid two">
+      <label>Enfoque principal
+        <input data-store id="vm-enfoque" placeholder="Ej: Consolidar hábitos base">
+      </label>
+      <label>Competencia a cultivar
+        <input data-store id="vm-competencia" placeholder="Ej: Fluidez lingüística">
+      </label>
+    </div>
+    <div class="grid three">
+      <label>Apoyo 1
+        <input data-store id="vm-apoyo1" placeholder="Ej: Sueño estable">
+      </label>
+      <label>Apoyo 2
+        <input data-store id="vm-apoyo2" placeholder="Ej: Movimiento diario">
+      </label>
+      <label>Sandbox (proyecto)
+        <input data-store id="vm-sandbox" placeholder="Ej: Mini sitio web">
+      </label>
+    </div>
+    <label>Límite de ideas nuevas / semana
+      <input data-store id="vm-limite" type="number" min="0" placeholder="Ej: 3">
+    </label>
+    <label>Motivación tranquila (2 líneas)
+      <textarea data-store id="vm-motivacion" rows="2" placeholder="Por qué esto importa ahora..."></textarea>
+    </label>
+
+    <div class="palette-preview no-print">
+      <h3>Paleta</h3>
+      <div class="swatches">
+        <div class="swatch s1"></div>
+        <div class="swatch s2"></div>
+        <div class="swatch s3"></div>
+        <div class="swatch s4"></div>
+        <div class="swatch s5"></div>
+      </div>
+      <small>Puedes ajustar variables en styles.css</small>
+    </div>
+  </section>
+
+  <!-- 2. TABLERO SEMANAL -->
+  <section class="page tab" data-tab="weekly">
+    <h2>Tablero Semanal</h2>
+    <div class="grid three">
+      <label>Semana #
+        <input data-store id="wk-num" placeholder="Ej: 37">
+      </label>
+      <label>Inicio
+        <input data-store id="wk-inicio" type="date">
+      </label>
+      <label>Fin
+        <input data-store id="wk-fin" type="date">
+      </label>
+    </div>
+
+    <table class="table fill" data-store-table id="weekly-table">
+      <thead>
+        <tr>
+          <th>Pilar</th>
+          <th>Meta Concreta</th>
+          <th>Métrica</th>
+          <th>Resultado</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Estudio Formal</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Idioma</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Entrenamiento</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Movimiento Ligero</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Creatividad</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Lectura</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Sueño / Descanso</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Enfoque Digital</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+        <tr>
+          <td>Autogestión</td>
+          <td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Prioridades (máx 3)</h3>
+    <ol class="prio">
+      <li contenteditable data-store id="wk-prio1"></li>
+      <li contenteditable data-store id="wk-prio2"></li>
+      <li contenteditable data-store id="wk-prio3"></li>
+    </ol>
+
+    <h3>Parking (NO esta semana)</h3>
+    <ul class="parking" id="wk-parking">
+      <li contenteditable data-store id="wk-p1"></li>
+      <li contenteditable data-store id="wk-p2"></li>
+      <li contenteditable data-store id="wk-p3"></li>
+    </ul>
+  </section>
+
+  <!-- 3. PLAN DIARIO -->
+  <section class="page tab" data-tab="daily">
+    <h2>Plan Diario</h2>
+    <div class="grid four">
+      <label>Fecha
+        <input data-store id="day-fecha" type="date">
+      </label>
+      <label>Energía (1–10)
+        <input data-store id="day-energia" type="number" min="1" max="10">
+      </label>
+      <label>Sueño (h)
+        <input data-store id="day-sueno" type="number" step="0.25">
+      </label>
+      <label>Estado físico
+        <input data-store id="day-estado" placeholder="Ligero / Tenso / OK">
+      </label>
+    </div>
+
+    <label>Intención (una frase)
+      <input data-store id="day-intencion" placeholder="Hoy cuenta si...">
+    </label>
+
+    <table class="table small fill" data-store-table id="daily-blocks">
+      <thead>
+        <tr><th>Bloque</th><th>Enfoque</th><th>Hora</th><th>✔</th><th>Nota</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Profundo #1</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Profundo #2</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Idioma</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Entrenamiento</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Creativo</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Lectura</td><td contenteditable></td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid three">
+      <label>Pausas activas (meta)
+        <input data-store id="day-pausas-meta" placeholder="Ej: 6">
+      </label>
+      <label>Pausas realizadas
+        <input data-store id="day-pausas-real" placeholder="0">
+      </label>
+      <label>Enfoque digital
+        <input data-store id="day-digital" placeholder="Bloques sin distracción">
+      </label>
+    </div>
+
+    <div class="grid two">
+      <label>Obstáculo de hoy
+        <textarea data-store id="day-obstaculo" rows="2"></textarea>
+      </label>
+      <label>Ajuste para mañana
+        <textarea data-store id="day-ajuste" rows="2"></textarea>
+      </label>
+    </div>
+
+    <label>Reflexión (2–4 líneas)
+      <textarea data-store id="day-reflexion" rows="3"></textarea>
+    </label>
+  </section>
+
+  <!-- 4. ENTRENAMIENTO -->
+  <section class="page tab" data-tab="training">
+    <h2>Registro Entrenamiento</h2>
+    <div class="grid four">
+      <label>Fecha
+        <input data-store id="tr-fecha" type="date">
+      </label>
+      <label>Tipo
+        <input data-store id="tr-tipo" placeholder="Upper / Lower / Mixto">
+      </label>
+      <label>Energía previa (1–10)
+        <input data-store id="tr-energia" type="number" min="1" max="10">
+      </label>
+      <label>Sueño (1–10)
+        <input data-store id="tr-sueno" type="number" min="1" max="10">
+      </label>
+    </div>
+
+    <table class="table small fill" data-store-table id="tr-table">
+      <thead>
+        <tr><th>#</th><th>Ejercicio</th><th>Series x Reps</th><th>Carga / Variante</th><th>RIR/RPE</th><th>Nota</th></tr>
+      </thead>
+      <tbody id="tr-body">
+        <tr>
+          <td>1</td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+            <td contenteditable></td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+            <td contenteditable></td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+            <td contenteditable></td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn ghost no-print" id="addExercise">+ Ejercicio</button>
+
+    <div class="grid two">
+      <label>Micro progreso
+        <input data-store id="tr-progreso" placeholder="+1 rep / mejor técnica">
+      </label>
+      <label>Plan ajuste próxima vez
+        <input data-store id="tr-ajuste" placeholder="Ej: aumentar lastre">
+      </label>
+    </div>
+
+    <div class="grid two">
+      <label>Sensación final (0–10)
+        <input data-store id="tr-final" type="number" min="0" max="10">
+      </label>
+      <label>Comentarios
+        <textarea data-store id="tr-comentarios" rows="2"></textarea>
+      </label>
+    </div>
+  </section>
+
+  <!-- 5. ESTUDIO / IDIOMA -->
+  <section class="page tab" data-tab="study">
+    <h2>Ficha Estudio / Idioma</h2>
+    <div class="grid three">
+      <label>Tema / Unidad
+        <input data-store id="st-tema" placeholder="Unidad / Week / Concepto">
+      </label>
+      <label>Fecha
+        <input data-store id="st-fecha" type="date">
+      </label>
+      <label>Revisión programada
+        <input data-store id="st-revision" type="date">
+      </label>
+    </div>
+
+    <label>Objetivo (estructura / vocab / función)
+      <textarea data-store id="st-objetivo" rows="2"></textarea>
+    </label>
+
+    <h3>Claves (máx 8)</h3>
+    <div class="grid four tiny">
+      <input data-store id="st-k1">
+      <input data-store id="st-k2">
+      <input data-store id="st-k3">
+      <input data-store id="st-k4">
+      <input data-store id="st-k5">
+      <input data-store id="st-k6">
+      <input data-store id="st-k7">
+      <input data-store id="st-k8">
+    </div>
+
+    <h3>Frases (5)</h3>
+    <ol class="phrases">
+      <li contenteditable data-store id="st-f1"></li>
+      <li contenteditable data-store id="st-f2"></li>
+      <li contenteditable data-store id="st-f3"></li>
+      <li contenteditable data-store id="st-f4"></li>
+      <li contenteditable data-store id="st-f5"></li>
+    </ol>
+
+    <h3>Mini-Retención (3 ideas)</h3>
+    <div class="grid three">
+      <input data-store id="st-r1" placeholder="Idea 1">
+      <input data-store id="st-r2" placeholder="Idea 2">
+      <input data-store id="st-r3" placeholder="Idea 3">
+    </div>
+
+    <h3>Errores (máx 3)</h3>
+    <div class="grid three">
+      <input data-store id="st-e1">
+      <input data-store id="st-e2">
+      <input data-store id="st-e3">
+    </div>
+
+    <div class="grid three">
+      <label>Audio grabado
+        <select data-store id="st-audio">
+          <option value="">--</option>
+          <option>Sí</option>
+          <option>No</option>
+        </select>
+      </label>
+      <label>Repeticiones escuchadas
+        <input data-store id="st-reps" type="number" min="0">
+      </label>
+      <label>Nota final
+        <input data-store id="st-nota" placeholder="Observación">
+      </label>
+    </div>
+  </section>
+
+  <!-- 6. CREATIVO -->
+  <section class="page tab" data-tab="creative">
+    <h2>Sesión Creativa</h2>
+    <div class="grid three">
+      <label>Fecha
+        <input data-store id="cr-fecha" type="date">
+      </label>
+      <label>Tema
+        <input data-store id="cr-tema" placeholder="Ej: Gestos / Perspectiva">
+      </label>
+      <label>Duración (min)
+        <input data-store id="cr-duracion" type="number" min="0">
+      </label>
+    </div>
+
+    <table class="table small fill">
+      <thead><tr><th>Parte</th><th>Min</th><th>Hecho</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td>Calentamiento</td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Ejercicio principal</td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Referencia / Estudio</td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+        <tr><td>Libre / Exploración</td><td contenteditable></td><td contenteditable></td><td contenteditable></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid two">
+      <label>Hallazgo / Idea
+        <textarea data-store id="cr-idea" rows="2"></textarea>
+      </label>
+      <label>Próximo mini-foco
+        <textarea data-store id="cr-next" rows="2"></textarea>
+      </label>
+    </div>
+  </section>
+
+  <!-- 7. REVISIÓN SEMANAL -->
+  <section class="page tab" data-tab="review">
+    <h2>Revisión Semanal</h2>
+    <h3>Lo mejor (3)</h3>
+    <ol class="checklist">
+      <li contenteditable data-store id="rv-b1"></li>
+      <li contenteditable data-store id="rv-b2"></li>
+      <li contenteditable data-store id="rv-b3"></li>
+    </ol>
+    <h3>Dónde me enredé (2)</h3>
+    <ol class="checklist">
+      <li contenteditable data-store id="rv-e1"></li>
+      <li contenteditable data-store id="rv-e2"></li>
+    </ol>
+    <label>Ajuste concreto (1 variable)
+      <input data-store id="rv-ajuste" placeholder="Ej: dormir antes 23:30">
+    </label>
+    <div class="grid three">
+      <label>En verde
+        <input data-store id="rv-verde">
+      </label>
+      <label>En amarillo
+        <input data-store id="rv-amarillo">
+      </label>
+      <label>En rojo
+        <input data-store id="rv-rojo">
+      </label>
+    </div>
+    <label>Algo postergado sin razón
+      <input data-store id="rv-poster" placeholder="Ej: organizar archivos">
+    </label>
+    <label>Frase resumen
+      <textarea data-store id="rv-frase" rows="2"></textarea>
+    </label>
+  </section>
+
+  <!-- 8. MAPA MENTAL -->
+  <section class="page tab" data-tab="mindmap">
+    <h2>Mapa Mental – Dirección Personal</h2>
+    <p class="hint">Esquema rápido; 1–3 palabras por nodo. Usa esta sección para derivar 2 acciones.</p>
+    <div class="mindmap">
+      <div class="node center" contenteditable data-store id="mm-core">Dirección</div>
+      <div class="node" contenteditable data-store id="mm-identidad">Identidad</div>
+      <div class="node" contenteditable data-store id="mm-aprendizaje">Aprendizaje</div>
+      <div class="node" contenteditable data-store id="mm-creatividad">Creatividad</div>
+      <div class="node" contenteditable data-store id="mm-contribucion">Contribución</div>
+      <div class="node" contenteditable data-store id="mm-energia">Energía</div>
+      <div class="node" contenteditable data-store id="mm-disciplina">Sistemas</div>
+      <div class="node" contenteditable data-store id="mm-relaciones">Relaciones</div>
+    </div>
+    <h3>Acciones derivadas (máx 2)</h3>
+    <ol class="checklist">
+      <li contenteditable data-store id="mm-a1"></li>
+      <li contenteditable data-store id="mm-a2"></li>
+    </ol>
+  </section>
+
+  <!-- 9. PREGUNTAS FILOSÓFICAS -->
+  <section class="page tab" data-tab="philo">
+    <h2>Reflexión / Preguntas</h2>
+    <p class="hint">Elige una pregunta, escribe 3–4 líneas.</p>
+    <ol class="philo">
+      <li>¿Qué es progreso para mí sin métricas externas?</li>
+      <li>¿Qué parte de mi día refleja mis valores y cuál es ruido?</li>
+      <li>¿Qué temo al volver a ser principiante?</li>
+      <li>¿Qué significa usar bien mi atención hoy?</li>
+      <li>¿Qué podría empezar en 10 minutos en lugar de postergar?</li>
+      <li>¿Qué incomodidad es crecimiento y cuál desgaste?</li>
+      <li>Si enseñara algo de esta semana, ¿qué sería?</li>
+      <li>¿Qué micro-decisiones repetí que construyen identidad?</li>
+      <li>¿Qué expectativa puedo soltar?</li>
+      <li>¿Qué haría si confiara más en la consistencia lenta?</li>
+    </ol>
+    <label>Respuesta
+      <textarea data-store id="ph-respuesta" rows="6"></textarea>
+    </label>
+  </section>
+
+  <!-- 10. PARKING LOT -->
+  <section class="page tab" data-tab="parking">
+    <h2>Parking Lot (Ideas Futuras)</h2>
+    <table class="table small fill" data-store-table id="pk-table">
+      <thead>
+        <tr><th>Idea</th><th>Motivo</th><th>No antes de</th><th>Primer paso</th></tr>
+      </thead>
+      <tbody id="pk-body">
+        <tr>
+          <td contenteditable></td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+          <td contenteditable></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn ghost no-print" id="addParking">+ Idea</button>
+  </section>
+
+  <!-- 11. NOTAS -->
+  <section class="page tab" data-tab="notes">
+    <h2>Notas Libres</h2>
+    <div class="notes" contenteditable data-store id="nt-libres" spellcheck="false" placeholder="Escribe aquí..."></div>
+  </section>
+
+</main>
+
+<footer class="no-print">
+  <small>Planner Chromakopia · Datos guardados localmente (localStorage) · v1</small>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
